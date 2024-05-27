@@ -1,4 +1,4 @@
-module compactchain
+module github.com/goupdate/compactchain
 
 go 1.22.2
 
