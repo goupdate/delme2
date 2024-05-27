@@ -15,7 +15,7 @@ type Entry[K constraints.Ordered, V any] struct {
 
 // CompactChain is a map of slices of slices of empty structs
 type CompactChain[K constraints.Ordered, V constraints.Ordered] struct {
-	sync.Mutex
+	sync.RWMutex
 
 	buffers []*Entry[K, V]
 }
@@ -62,8 +62,8 @@ func (m *CompactChain[K, V]) Add(key K, value V) {
 
 // Get retrieves the values associated with a key in the CompactChain
 func (m *CompactChain[K, V]) Get(key K) ([]V, bool) {
-	m.Lock()
-	defer m.Unlock()
+	m.RLock()
+	defer m.RUnlock()
 
 	bufferIndex := sort.Search(len(m.buffers), func(i int) bool {
 		return m.buffers[i].Key >= key
@@ -101,8 +101,8 @@ func (m *CompactChain[K, V]) Delete(key K, value V) {
 
 // Exist checks if a key-value pair exists in the CompactChain
 func (m *CompactChain[K, V]) Exist(key K, value V) bool {
-	m.Lock()
-	defer m.Unlock()
+	m.RLock()
+	defer m.RUnlock()
 
 	bufferIndex := sort.Search(len(m.buffers), func(i int) bool {
 		return m.buffers[i].Key >= key
@@ -121,8 +121,8 @@ func (m *CompactChain[K, V]) Exist(key K, value V) bool {
 
 // Count returns the total number of key-value pairs in the CompactChain
 func (m *CompactChain[K, V]) Count() int {
-	m.Lock()
-	defer m.Unlock()
+	m.RLock()
+	defer m.RUnlock()
 
 	count := 0
 	for _, entry := range m.buffers {
@@ -133,8 +133,8 @@ func (m *CompactChain[K, V]) Count() int {
 
 // Iterate iterates over all key-value pairs in the CompactChain
 func (m *CompactChain[K, V]) Iterate(fn func(key K, value V) bool) {
-	m.Lock()
-	defer m.Unlock()
+	m.RLock()
+	defer m.RUnlock()
 
 	for _, entry := range m.buffers {
 		for _, value := range *entry.Chain {
