@@ -109,3 +109,24 @@ func TestAddMultipleBuffers(t *testing.T) {
 		}
 	}
 }
+
+
+func TestIterateKeys(t *testing.T) {
+	cm := NewCompactChain[int, int]()
+	cm.Add(1, 100)
+	cm.Add(1, 200)
+	cm.Add(2, 300)
+
+	var results []string
+	cm.IterateKeys(func(key int, values []int) bool {
+		results = append(results, fmt.Sprintf("Key: %d, Values: %v", key, values))
+		return true
+	})
+
+	expectedResults := []string{
+		"Key: 1, Values: [100 200]",
+		"Key: 2, Values: [300]",
+	}
+
+	assert.ElementsMatch(t, expectedResults, results, "IterateKeys should iterate over all keys and their values correctly")
+}

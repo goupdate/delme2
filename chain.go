@@ -144,3 +144,15 @@ func (m *CompactChain[K, V]) Iterate(fn func(key K, value V) bool) {
 		}
 	}
 }
+
+// Iterate iterates over all keys in the CompactChain
+func (m *CompactChain[K, V]) IterateKeys(fn func(key K, values []V) bool) {
+	m.RLock()
+	defer m.RUnlock()
+
+	for _, entry := range m.buffers {
+		if !fn(entry.Key, *entry.Chain) {
+			return
+		}
+	}
+}
