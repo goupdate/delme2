@@ -1,6 +1,6 @@
-# CompactMap
+# CompactChain
 
-CompactChain is a Go library that provides a memory-efficient alternative to the standard map. It organizes entries into multiple buffers to optimize memory usage, making it suitable for applications where memory efficiency is critical. The library supports adding, getting, deleting, checking existence, counting, and iterating over key-value pairs.
+CompactChain is a Go library that provides a memory-efficient alternative to the slice of slices (chain of elements). It organizes entries into multiple buffers to optimize memory usage, making it suitable for applications where memory efficiency is critical. The library supports adding, getting, deleting, checking existence, counting, and iterating over key-value pairs.
 
 ## Features
 
